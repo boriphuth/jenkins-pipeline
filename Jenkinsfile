@@ -1,6 +1,6 @@
 def CONTAINER_NAME="jenkins-pipeline"
 def CONTAINER_TAG="latest"
-def DOCKER_HUB_USER="hakdogan"
+def DOCKER_HUB_USER="boriphuth"
 def HTTP_PORT="8090"
 
 node(label:'builder') {
@@ -31,15 +31,21 @@ node(label:'builder') {
         imagePrune(CONTAINER_NAME)
     }
 
-    stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
-    }
+    // stage('Image Build'){
+    //     imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+    // }
 
-    stage('Push to Docker Registry'){
-        withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-            pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
+    stage('docker build/push') {
+        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+        def app = docker.build("${CONTAINER_NAME}/${CONTAINER_NAME}:${CONTAINER_TAG}", '.').push()
         }
     }
+
+    // stage('Push to Docker Registry'){
+    //     withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    //         pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
+    //     }
+    // }
 
     stage('Run App'){
         runApp(CONTAINER_NAME, CONTAINER_TAG, DOCKER_HUB_USER, HTTP_PORT)
