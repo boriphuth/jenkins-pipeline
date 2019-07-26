@@ -3,7 +3,7 @@ def CONTAINER_TAG="latest"
 def DOCKER_HUB_USER="hakdogan"
 def HTTP_PORT="8090"
 
-node {
+node(label:'builder') {
 
     stage('Initialize'){
         def dockerHome = tool 'Docker'
