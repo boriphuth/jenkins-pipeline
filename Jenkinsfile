@@ -37,7 +37,7 @@ node(label:'builder') {
 
     stage('docker build/push') {
         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
-        def app = docker.build("${CONTAINER_NAME}/${CONTAINER_NAME}:${CONTAINER_TAG}", '.').push()
+        def app = docker.build("${DOCKER_HUB_USER}/${CONTAINER_NAME}:${CONTAINER_TAG}", '.').push()
         }
     }
 
