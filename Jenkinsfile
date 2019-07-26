@@ -21,7 +21,8 @@ node(label:'builder') {
 
     stage('Sonar'){
         try {
-            sh "mvn sonar:sonar"
+            // sh "mvn sonar:sonar"
+            sh "mvn package sonar:sonar -DskipTests"
         } catch(error){
             echo "The sonar server could not be reached ${error}"
         }
